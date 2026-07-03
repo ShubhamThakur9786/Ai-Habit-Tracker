@@ -51,6 +51,12 @@ app.use("/api/habits", habitRoutes);
 app.use("/api/logs", logRoutes);
 app.use("/api/ai", aiRoutes);
 
+app.get("/", (req, res) => {
+  res.json({
+    message: "AI Habit Tracker API is running 🚀",
+  });
+});
+
 app.use(notFound);
 app.use(errorHandler);
 
