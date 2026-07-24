@@ -13,23 +13,30 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
+    console.log("Auth useEffect started");
+
+  const token = localStorage.getItem("token");
+  console.log("Token:", token);
+
+  if (!token) {
+    console.log("No token");
+    setLoading(false);
+    return;
+  }
+
+  api
+    .get("/auth/me")
+    .then((res) => {
+      console.log("Success", res.data);
+      setUser(res.data.user);
+    })
+    .catch((err) => {
+      console.log("Error", err);
+    })
+    .finally(() => {
+      console.log("Finally executed");
       setLoading(false);
-      return;
-    }
-    api
-      .get("/auth/me")
-      .then((res) => {
-        setUser(res.data.user);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-      })
-      .catch(() => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        setUser(null);
-      })
-      .finally(() => setLoading(false));
+    });
   }, []);
 
   const login = async (email, password) => {
